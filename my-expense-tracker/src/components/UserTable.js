@@ -21,9 +21,9 @@ const UserTable = ({ users: initialUsers, onUserChange, onUserCreation, onUserDe
     };
     setUsers(prevUsers => [...prevUsers, newUser]);
     onUserCreation(newUser);
-    handleClose();
+    handleDialogClose();
   };
-  
+
   const handleUpdateUser = (selectedUser) => {
     setUsers(prevUsers => {
       return prevUsers.map(user => {
@@ -34,7 +34,7 @@ const UserTable = ({ users: initialUsers, onUserChange, onUserCreation, onUserDe
       });
     });
     onUserChange(selectedUser)
-    handleClose();
+    handleDialogClose();
   };
 
   const handleDeleteUser = (time_created_at) => {
@@ -49,7 +49,7 @@ const UserTable = ({ users: initialUsers, onUserChange, onUserCreation, onUserDe
     setDialogOpen(true);
   };
 
-  const handleClose = () => {
+  const handleDialogClose = () => {
     setDialogOpen(false);
     setSelectedUser(null);
   };

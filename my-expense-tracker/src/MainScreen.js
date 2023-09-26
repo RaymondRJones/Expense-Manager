@@ -62,6 +62,7 @@ const MainScreen = () => {
         }
       });
     };
+    
     // Updates state when new Expense is delete
     const handleDeleteExpense = (deletedExpenseCreatedAt) => {
       setExpenses(prevExpenses => {
@@ -76,6 +77,7 @@ const MainScreen = () => {
         [userTimeCreated]: prevTotals[userTimeCreated] - deletedExpenseCost
       }));
     };
+
     // Updates state when a user changes
     const handleUserChange = (updatedUser) => {
       setUsers(prevUsers => ({
@@ -83,6 +85,7 @@ const MainScreen = () => {
         [updatedUser.time_created_at]: updatedUser
       }));
     };
+
     // Updates state when a new user is added
     const handleNewUser = (newUser) => {
       setUsers(prevUsers => ({
@@ -90,6 +93,7 @@ const MainScreen = () => {
         [newUser.time_created_at]: newUser
       }));
     };
+    
     // Updates state when a user is deleted and removes all their expenses
     const handleDeletedUser = (deletedUserTimeCreatedAt) => {
       setUsers(prevUsers => {
