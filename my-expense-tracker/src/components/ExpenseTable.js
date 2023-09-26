@@ -14,20 +14,41 @@ const Expense = ({ category, description, cost, onEdit, onDelete }) => (
   </React.Fragment>
 );
 
-const ExpenseTable = ({ expenses, users, onAddExpense }) => {
+const ExpenseTable = ({ expenses: initialExpenses, users, onAddExpense }) => {
     const [isDialogOpen, setDialogOpen] = useState(false);
     const [selectedExpense, setSelectedExpense] = useState(null);
+    const [expenses, setExpenses] = useState(initialExpenses);
 
     const handleAddExpense = (newExpense) => {
-
+        setExpenses([...expenses, newExpense]);
+        console.log(expenses, "hi")
+        onAddExpense(newExpense)
+        setDialogOpen(false);
     };
 
     const handleUpdateExpense = (updatedExpense) => {
+
+        const expenseIndex = expenses.findIndex(
+            (expense) => expense.user_time_created === updatedExpense.user_time_created
+        );
+        if (expenseIndex !== -1) {
+
+            const updatedExpenses = [...expenses];
+            updatedExpenses[expenseIndex] = updatedExpense;
         
+            setExpenses(updatedExpenses);
+        }
+        setDialogOpen(false);
     };
+    
 
     const handleDeleteExpense = (expenseId) => {
-        
+
+        const updatedExpenses = expenses.filter(
+            (expense) => expense.user_time_created !== expenseId
+        );
+
+        setExpenses(updatedExpenses);
     };
 
     const handleEditClick = (expense) => {
@@ -35,39 +56,40 @@ const ExpenseTable = ({ expenses, users, onAddExpense }) => {
         setDialogOpen(true);
     };
 
-  return (
-    <Paper className="expense-table">
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Category</TableCell>
-            <TableCell>Description</TableCell>
-            <TableCell>Cost</TableCell>
-            <TableCell>Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {expenses.map(expense => (
-            <TableRow key={expense.user_time_created}>
-              <Expense
-                {...expense}
-                onEdit={() => handleEditClick(expense)}
-                onDelete={() => handleDeleteExpense(expense.user_time_created)}
-              />
+    return (
+        <Paper className="expense-table">
+        <Table>
+            <TableHead>
+            <TableRow>
+                <TableCell>Category</TableCell>
+                <TableCell>Description</TableCell>
+                <TableCell>Cost</TableCell>
+                <TableCell>Actions</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <Button variant="contained" color="primary" onClick={() => { setSelectedExpense(null); setDialogOpen(true); }}>Add Expense</Button>
-        
-      <ExpensesDialog
-        isOpen={isDialogOpen}
-        onClose={() => setDialogOpen(false)}
-        onSave={selectedExpense ? handleUpdateExpense : handleAddExpense}
-        users={users}
-      />
-    </Paper>
-  );
+            </TableHead>
+            <TableBody>
+            {expenses.map(expense => (
+                <TableRow key={expense.user_time_created}>
+                <Expense
+                    {...expense}
+                    onEdit={() => handleEditClick(expense)}
+                    onDelete={() => handleDeleteExpense(expense.user_time_created)}
+                />
+                </TableRow>
+            ))}
+            </TableBody>
+        </Table>
+        <Button variant="contained" color="primary" onClick={() => { setSelectedExpense(null); setDialogOpen(true); }}>Add Expense</Button>
+            
+        <ExpensesDialog
+            isOpen={isDialogOpen}
+            onClose={() => setDialogOpen(false)}
+            onSave={selectedExpense ? handleUpdateExpense : handleAddExpense}
+            expense={selectedExpense}
+            users={users}
+        />
+        </Paper>
+    );
 }
 
 export default ExpenseTable;

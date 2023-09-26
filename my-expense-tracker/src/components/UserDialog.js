@@ -27,7 +27,7 @@ const UserDialog = ({ isOpen, user, onClose, onSave }) => {
         }
 
         onSave(tempUser);
-            onClose();
+        onClose();
     };
 
     return (

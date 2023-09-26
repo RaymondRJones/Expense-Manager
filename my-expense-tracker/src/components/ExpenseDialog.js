@@ -12,22 +12,31 @@ import {
   FormControl
 } from '@mui/material';
 import {CATEGORIES} from '../static';
-const ExpenseDialog = ({ isOpen, onClose, onSave, users}) => {
+const ExpenseDialog = ({ isOpen, onClose, onSave, expense, users}) => {
   const [expenseData, setExpenseData] = useState({
-    user: '',
-    category: '',
-    description: '',
-    cost: 0,
+    user: expense?.user || '',
+    category: expense?.category || '',
+    description: expense?.description || '',
+    cost: expense?.cost || 0,
   });
 
   useEffect(() => {
-    setExpenseData({
-      user: '',
-      category: '',
-      description: '',
-      cost: 0,
-    });
-  }, [isOpen]);
+    if (expense) {
+      setExpenseData({
+        user: expense.user,
+        category: expense.category,
+        description: expense.description,
+        cost: expense.cost,
+      });
+    } else {
+      setExpenseData({
+        user: '',
+        category: '',
+        description: '',
+        cost: 0,
+      });
+    }
+  }, [expense]);
 
   const handleSave = () => {
     if (expenseData.user && expenseData.category && expenseData.description && expenseData.cost) {
@@ -40,7 +49,7 @@ const ExpenseDialog = ({ isOpen, onClose, onSave, users}) => {
 
   return (
     <Dialog open={isOpen} onClose={onClose}>
-      <DialogTitle>Add New Expense</DialogTitle>
+      <DialogTitle>{expense ? "Edit Expense" : "Add New Expense"}</DialogTitle>
       <DialogContent>
         <FormControl fullWidth margin="normal">
           <InputLabel id="user-dropdown-label">User</InputLabel>

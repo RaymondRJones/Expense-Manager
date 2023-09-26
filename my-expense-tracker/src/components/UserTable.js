@@ -10,12 +10,14 @@ const UserTable = ({ users: initialUsers }) => {
   const handleAddUser = (selectedUser) => {
     const firstName = selectedUser.firstName;
     const lastName = selectedUser.lastName;
+    const currentDate = new Date();
+    const unixTimestamp = Math.floor(currentDate.getTime() / 1000);
 
     const newUser = {
       firstName,
       lastName,
       total_expenses: 0,
-      time_created_at: new Date().toISOString(),
+      time_created_at: unixTimestamp,
     };
     setUsers(prevUsers => [...prevUsers, newUser]);
     handleClose();

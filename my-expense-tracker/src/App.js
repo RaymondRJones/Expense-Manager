@@ -8,15 +8,16 @@ const App = () => {
   const [expensesState, setExpensesState] = useState(expenses);
   const findUserById = (userId) => {
     return usersState.find(user => user.id === userId);
-};
+  };
 
-const calculateTotalExpensesForUser = (userId) => {
-    return expensesState
-    .filter(expense => expense.user_id === userId)
-    .reduce((acc, expense) => acc + expense.cost, 0);
-};
+  const calculateTotalExpensesForUser = (userId) => {
+      return expensesState
+      .filter(expense => expense.user_id === userId)
+      .reduce((acc, expense) => acc + expense.cost, 0);
+  };
   const handleAddExpense = (newExpense) => {
     setExpensesState(prevExpenses => [...prevExpenses, newExpense]);
+    console.log(newExpense, "hi");
     const userToUpdate = usersState.find(user => user.time_created_at === newExpense.time_created_at);
     if (userToUpdate) {
       userToUpdate.total_expenses += newExpense.cost;
