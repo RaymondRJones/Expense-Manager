@@ -7,24 +7,7 @@ import { Container, Grid, Typography, Paper } from '@mui/material';
 const App = () => {
     const [usersState, setUsersState] = useState(users);
     const [expensesState, setExpensesState] = useState(expenses);
-    useEffect(() => {
-        updateUsersTotalExpenses();
-    }, [expensesState]);
-
-    const calculateTotalExpensesForUser = (user_time_created) => {
-      return expensesState
-      .filter(expense => expense.user_time_created === user_time_created)
-      .reduce((acc, expense) => acc + expense.cost, 0);
-    };
-
-    const updateUsersTotalExpenses = () => {
-      const updatedUsers = usersState.map(user => ({
-          ...user,
-          totalExpenses: calculateTotalExpensesForUser(user.time_created_at)
-      }));
-      setUsersState(updatedUsers);
-    }
-
+    // Could maybe add these into a helper file to simplify this component
     const handleAddExpense = (newExpense) => {
       setExpensesState(prevExpenses => [...prevExpenses, newExpense]);
       const userToUpdate = usersState.find(user => user.time_created_at === newExpense.user_time_created);
@@ -36,17 +19,36 @@ const App = () => {
           )
         );
       }
-      updateUsersTotalExpenses() // O(N) evertime
+
     };
-    
+    const updateAllExpenses = (updatedExpenses) => {
+      setExpensesState(updatedExpenses);
+    };
+
     const handleUserChange = (updatedUser) => {
-      console.log(updatedUser)
       const updatedUsers = usersState.map(user => 
           user.time_created_at === updatedUser.time_created_at ? updatedUser : user
       );
       setUsersState(updatedUsers);
     }
-  
+
+    const handleNewUser = (newUser) => {
+      setUsersState(prevUsers => [...prevUsers, newUser]);
+    }
+
+    const handleDeletedUser = (deletedUserTimeCreatedAt) => {
+      console.log(expensesState, "before")
+      // Remove the user from the usersState
+      const updatedUsers = usersState.filter(user => user.time_created_at !== deletedUserTimeCreatedAt);
+      setUsersState(updatedUsers);
+    
+      // Remove all expenses related to the deleted user
+      
+      const updatedExpenses = expensesState.filter(expense => expense.user_time_created !== deletedUserTimeCreatedAt);
+      console.log(updatedExpenses)
+      setExpensesState(updatedExpenses);
+    }
+
     return (
       <Container maxWidth="lg" className="main-container">
         <Typography variant="h4" align="center" gutterBottom>
@@ -59,7 +61,7 @@ const App = () => {
               <Typography variant="h6" align="center" gutterBottom>
                 Expenses
               </Typography>
-              <ExpenseTable expenses={expenses} users={usersState} onAddExpense={handleAddExpense}/>
+              <ExpenseTable expenses={expensesState} users={usersState} onAddExpense={handleAddExpense} updateExpenses={updateAllExpenses}/>
             </Paper>
           </Grid>
 
@@ -68,7 +70,7 @@ const App = () => {
               <Typography variant="h6" align="center" gutterBottom>
                 Users
               </Typography>
-              <UserTable users={users} onUserChange={handleUserChange} />
+              <UserTable users={usersState} onUserChange={handleUserChange} onUserCreation={handleNewUser} onUserDeletion={handleDeletedUser} expenses={expensesState}/>
             </Paper>
           </Grid>
         </Grid>

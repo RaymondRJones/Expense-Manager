@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableRow, Button, Paper } from '@mui/material';
 import UserDialog from './UserDialog';
 
-const UserTable = ({ users: initialUsers, onUserChange }) => {
+const UserTable = ({ users: initialUsers, onUserChange, onUserCreation, onUserDeletion, expenses }) => {
   const [users, setUsers] = useState(initialUsers);
   const [selectedUser, setSelectedUser] = useState(null);
   const [isDialogOpen, setDialogOpen] = useState(false);
@@ -20,7 +20,14 @@ const UserTable = ({ users: initialUsers, onUserChange }) => {
       time_created_at: unixTimestamp,
     };
     setUsers(prevUsers => [...prevUsers, newUser]);
+    onUserCreation(newUser);
     handleClose();
+  };
+   // O(N) on initial load
+   // Can make it O(1) on expense delete/create by using indexed array or hash_map
+  const calculateTotalExpensesForUser = (user_time_created) => {
+    const userExpenses = expenses.filter(expense => expense.user_time_created === user_time_created);
+    return userExpenses.reduce((acc, expense) => acc + expense.cost, 0);
   };
 
   const handleUpdateUser = (selectedUser) => {
@@ -38,6 +45,7 @@ const UserTable = ({ users: initialUsers, onUserChange }) => {
 
   const handleDeleteUser = (time_created_at) => {
     setUsers(prevUsers => prevUsers.filter(user => user.time_created_at !== time_created_at));
+    onUserDeletion(time_created_at)
     setSelectedUser(null);
   };
 
@@ -68,7 +76,7 @@ const UserTable = ({ users: initialUsers, onUserChange }) => {
             <TableRow key={user.time_created_at}>
               <TableCell>{user.firstName}</TableCell>
               <TableCell>{user.lastName}</TableCell>
-              <TableCell>${user.total_expenses}</TableCell>
+              <TableCell>${calculateTotalExpensesForUser(user.time_created_at)}</TableCell>
               <TableCell>
                 <Button onClick={() => handleEditClick(user.time_created_at)}>Edit</Button>
                 <Button onClick={() => handleDeleteUser(user.time_created_at)}>Delete</Button>

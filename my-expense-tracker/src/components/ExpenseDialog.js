@@ -32,7 +32,7 @@ const ExpenseDialog = ({ isOpen, onClose, onSave, expense, users}) => {
     }, [expense]);
 
     const handleSave = () => {
-      if (expenseData.user && expenseData.category && expenseData.description && expenseData.cost) {
+      if (expenseData.user_time_created && expenseData.category && expenseData.description && expenseData.cost) {
         onSave(expenseData);
         onClose();
       } else {
@@ -49,7 +49,8 @@ const ExpenseDialog = ({ isOpen, onClose, onSave, expense, users}) => {
             <Select
               labelId="user-dropdown-label"
               value={expenseData.user_time_created}
-              onChange={(e) => setExpenseData({ ...expenseData, user: e.target.value })}
+              onChange={(e) => setExpenseData({ ...expenseData, user_time_created: e.target.value })}
+
             >
               {users.map(user => (
                 <MenuItem key={user.time_created_at} value={user.time_created_at}>
