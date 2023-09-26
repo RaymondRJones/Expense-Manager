@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableRow, Button, Paper } from '@mui/material';
 import UserDialog from './UserDialog';
 
-const UserTable = ({ users: initialUsers }) => {
+const UserTable = ({ users: initialUsers, onUserChange }) => {
   const [users, setUsers] = useState(initialUsers);
   const [selectedUser, setSelectedUser] = useState(null);
   const [isDialogOpen, setDialogOpen] = useState(false);
@@ -32,6 +32,7 @@ const UserTable = ({ users: initialUsers }) => {
         return user;
       });
     });
+    onUserChange(selectedUser)
     handleClose();
   };
 

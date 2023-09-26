@@ -33,11 +33,9 @@ const ExpenseTable = ({ expenses: initialExpenses, users, onAddExpense }) => {
     };
 
     const handleUpdateExpense = (updatedExpense) => {
-        console.log("updating..", updatedExpense)
         const expenseIndex = expenses.findIndex(
             (expense) => expense.user_time_created === updatedExpense.user_time_created
         );
-        console.log(expenseIndex);
         if (expenseIndex !== -1) {
 
             const updatedExpenses = [...expenses];

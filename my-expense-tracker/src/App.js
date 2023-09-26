@@ -6,15 +6,19 @@ import { Container, Grid, Typography, Paper } from '@mui/material';
 const App = () => {
     const [usersState, setUsersState] = useState(users);
     const [expensesState, setExpensesState] = useState(expenses);
-    const findUserById = (userId) => {
-      return usersState.find(user => user.id === userId);
-    };
 
-    const calculateTotalExpensesForUser = (userId) => {
-        return expensesState
-        .filter(expense => expense.user_id === userId)
-        .reduce((acc, expense) => acc + expense.cost, 0);
+    const calculateTotalExpensesForUser = (user_time_created) => {
+      return expensesState
+      .filter(expense => expense.user_time_created === user_time_created)
+      .reduce((acc, expense) => acc + expense.cost, 0);
     };
+    const updateUsersTotalExpenses = () => {
+      const updatedUsers = usersState.map(user => ({
+          ...user,
+          totalExpenses: calculateTotalExpensesForUser(user.time_created_at)
+      }));
+      setUsersState(updatedUsers);
+    }
     
     const handleAddExpense = (newExpense) => {
       setExpensesState(prevExpenses => [...prevExpenses, newExpense]);
@@ -27,33 +31,16 @@ const App = () => {
           )
         );
       }
+      updateUsersTotalExpenses() // O(N) evertime
     };
-    /*
-    const handleAddUser = (newUser) => {
-      setExpensesState(prevExpenses => [...prevExpenses, newExpense]);
-      const userToUpdate = usersState.find(user => user.id === newExpense.user_id);
-      if (userToUpdate) {
-        userToUpdate.total_expenses += newExpense.cost;
-        setUsersState(prevUsers => 
-          prevUsers.map(user => 
-            user.id === userToUpdate.id ? userToUpdate : user
-          )
-        );
-      }
-    };
-    const handleEditUser = (newUser) => {
-      setExpensesState(prevExpenses => [...prevExpenses, newExpense]);
-      const userToUpdate = usersState.find(user => user.id === newExpense.user_id);
-      if (userToUpdate) {
-        userToUpdate.total_expenses += newExpense.cost;
-        setUsersState(prevUsers => 
-          prevUsers.map(user => 
-            user.id === userToUpdate.id ? userToUpdate : user
-          )
-        );
-      }
-    };
-  */
+    const handleUserChange = (updatedUser) => {
+      console.log(updatedUser)
+      const updatedUsers = usersState.map(user => 
+          user.time_created_at === updatedUser.time_created_at ? updatedUser : user
+      );
+      setUsersState(updatedUsers);
+    }
+  
     return (
       <Container maxWidth="lg" className="main-container">
         <Typography variant="h4" align="center" gutterBottom>
@@ -75,7 +62,7 @@ const App = () => {
               <Typography variant="h6" align="center" gutterBottom>
                 Users
               </Typography>
-              <UserTable users={users} />
+              <UserTable users={users} onUserChange={handleUserChange} />
             </Paper>
           </Grid>
         </Grid>
