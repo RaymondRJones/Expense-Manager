@@ -2,25 +2,21 @@ import React, { useState, useEffect } from 'react';
 import UserTable from './components/UserTable';
 import ExpenseTable from './components/ExpenseTable';
 import ExpenseSummary from './components/ExpenseSummary';
+import { computeInitialTotals} from './util/expenseHelpers';
 import {users, expenses} from './static'
 import { Container, Grid, Typography, Paper } from '@mui/material';
 
 const App = () => {
-    // Uses Hashmap to use O(1) add, update, and delete with O(N) space
+    // Closer to O(1) using a hash map for state
     const [usersState, setUsersState] = useState(users);
     const [expensesState, setExpensesState] = useState(expenses);
     const [memoizedTotalExpenses, setMemoizedTotalExpenses] = useState({});
 
     useEffect(() => {
-      // Calculate initial totals
-      const initialTotals = Object.values(expensesState).reduce((acc, expense) => {
-        acc[expense.user_time_created] = (acc[expense.user_time_created] || 0) + expense.cost;
-        return acc;
-      }, {});
-    
-      setMemoizedTotalExpenses(initialTotals);
+      setMemoizedTotalExpenses(computeInitialTotals(expensesState));
     }, [expenses]);
-    
+
+    // one pass to copy entire expenses and add expense
     const handleAddExpense = (newExpense) => {
       setExpensesState(prevExpenses => ({
         ...prevExpenses,
