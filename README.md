@@ -61,3 +61,10 @@ This could even be abstracted further to create a general Dialog component to us
 ### Component Design - Expense Management
 
 This follows the same idea as the User Management. To improve possible reusability and reduce the overall code in a single file, it was broken into two different components.
+
+
+# Future Considerations
+
+There's several functions that could be broken into util functions to further simplify the code and improve the overall maintainability. However, these take more time to implement. So, they have to be left for the future.
+
+Also, it'd be nice to have a constants file that contains all of the text of common HTML. Like, HEADER="Expense Tracker" so it can be imported and reused into multiple places. Ideally this would be done for every instance of hard coded constants. Again, in the interest of time, these can't happen right now. But with more time, this would be a very good next step.
