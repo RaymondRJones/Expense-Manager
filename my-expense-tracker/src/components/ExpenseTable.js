@@ -6,7 +6,7 @@ const Expense = ({ category, description, cost, onEdit, onDelete }) => (
   <>
     <TableCell>{category}</TableCell>
     <TableCell>{description}</TableCell>
-    <TableCell>{cost.toFixed(2)}</TableCell>
+    <TableCell>${cost.toFixed(2)}</TableCell>
     <TableCell>
       <Button onClick={onEdit}>Edit</Button>
       <Button onClick={onDelete}>Delete</Button>
@@ -31,8 +31,8 @@ const ExpenseTable = ({ expenses, users, onAddExpense, onDeleteExpense, onUpdate
         const expenseIndex = expenses.findIndex(
             (expense) => expense.id === updatedExpense.id
         );
-        if (expenseIndex !== -1) {
-
+        // Check if index exists before setting
+        if (expenseIndex !== -1) {  // Could turn this into a function like isValidIndex(expenseIndex)
             const updatedExpenses = [...expenses];
             updatedExpenses[expenseIndex] = updatedExpense;
         

@@ -10,12 +10,12 @@ const UserTable = ({ users: initialUsers, onUserChange, onUserCreation, onUserDe
   const handleAddUser = (selectedUser) => {
     const firstName = selectedUser.firstName;
     const lastName = selectedUser.lastName;
-    
+
     const newUser = {
       firstName,
       lastName,
       total_expenses: 0,
-      id: uuidv4(),
+      id: uuidv4(),  // generates a unique ID
     };
     setUsers(prevUsers => [...prevUsers, newUser]);
     onUserCreation(newUser);
