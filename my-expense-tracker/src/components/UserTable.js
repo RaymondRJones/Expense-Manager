@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableRow, Button, Paper } from '@mui/material';
 import UserDialog from './UserDialog';
-
+import { v4 as uuidv4 } from 'uuid';
 const UserTable = ({ users: initialUsers, onUserChange, onUserCreation, onUserDeletion, expenses, memoExpenses }) => {
   const [users, setUsers] = useState(initialUsers);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -10,14 +10,12 @@ const UserTable = ({ users: initialUsers, onUserChange, onUserCreation, onUserDe
   const handleAddUser = (selectedUser) => {
     const firstName = selectedUser.firstName;
     const lastName = selectedUser.lastName;
-    const currentDate = new Date();
-    const unixTimestamp = Math.floor(currentDate.getTime() / 1000);
-
+    
     const newUser = {
       firstName,
       lastName,
       total_expenses: 0,
-      time_created_at: unixTimestamp,
+      id: uuidv4(),
     };
     setUsers(prevUsers => [...prevUsers, newUser]);
     onUserCreation(newUser);
@@ -27,7 +25,7 @@ const UserTable = ({ users: initialUsers, onUserChange, onUserCreation, onUserDe
   const handleUpdateUser = (selectedUser) => {
     setUsers(prevUsers => {
       return prevUsers.map(user => {
-        if (user.time_created_at === selectedUser.time_created_at) {
+        if (user.id === selectedUser.id) {
           return selectedUser;
         }
         return user;
@@ -37,14 +35,14 @@ const UserTable = ({ users: initialUsers, onUserChange, onUserCreation, onUserDe
     handleDialogClose();
   };
 
-  const handleDeleteUser = (time_created_at) => {
-    setUsers(prevUsers => prevUsers.filter(user => user.time_created_at !== time_created_at));
-    onUserDeletion(time_created_at)
+  const handleDeleteUser = (id) => {
+    setUsers(prevUsers => prevUsers.filter(user => user.id !== id));
+    onUserDeletion(id)
     setSelectedUser(null);
   };
 
-  const handleEditClick = (time_created_at) => {
-    const userToEdit = users.find(user => user.time_created_at === time_created_at);
+  const handleEditClick = (id) => {
+    const userToEdit = users.find(user => user.id === id);
     setSelectedUser(userToEdit);
     setDialogOpen(true);
   };
@@ -67,13 +65,13 @@ const UserTable = ({ users: initialUsers, onUserChange, onUserCreation, onUserDe
         </TableHead>
         <TableBody>
           {users.map(user => (
-            <TableRow key={user.time_created_at}>
+            <TableRow key={user.id}>
               <TableCell>{user.firstName}</TableCell>
               <TableCell>{user.lastName}</TableCell>
-              <TableCell>${memoExpenses[user.time_created_at] || 0}</TableCell>
+              <TableCell>${memoExpenses[user.id] || 0}</TableCell>
               <TableCell>
-                <Button onClick={() => handleEditClick(user.time_created_at)}>Edit</Button>
-                <Button onClick={() => handleDeleteUser(user.time_created_at)}>Delete</Button>
+                <Button onClick={() => handleEditClick(user.id)}>Edit</Button>
+                <Button onClick={() => handleDeleteUser(user.id)}>Delete</Button>
               </TableCell>
             </TableRow>
           ))}

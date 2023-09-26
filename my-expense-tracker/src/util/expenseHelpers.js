@@ -1,6 +1,6 @@
 export const computeInitialTotals = (expensesState) => {
     return Object.values(expensesState).reduce((acc, expense) => {
-      acc[expense.user_time_created] = (acc[expense.user_time_created] || 0) + expense.cost;
+      acc[expense.userId] = (acc[expense.userId] || 0) + expense.cost;
       return acc;
     }, {});
   };

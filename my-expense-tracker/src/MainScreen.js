@@ -19,31 +19,31 @@ const MainScreen = () => {
     const handleAddExpense = (newExpense) => {
       setExpenses(prevExpenses => ({
         ...prevExpenses,
-        [newExpense.time_created_at]: newExpense
+        [newExpense.id]: newExpense
       }));
 
       setTotalExpensesByUser(prevTotals => ({
         ...prevTotals,
-        [newExpense.user_time_created]: (prevTotals[newExpense.user_time_created] || 0) + newExpense.cost
+        [newExpense.userId]: (prevTotals[newExpense.userId] || 0) + newExpense.cost
       }));
     };
     // Updates state when new Expense is edited
     const handleUpdateExpense = (updatedExpense) => {
-      const oldExpense = expenses[updatedExpense.time_created_at];
+      const oldExpense = expenses[updatedExpense.id];
       const oldExpenseCost = oldExpense.cost;
-      const oldUserId = oldExpense.user_time_created;
+      const oldUserId = oldExpense.userId;
       const difference = updatedExpense.cost - oldExpenseCost;
     
       setExpenses(prevExpenses => ({
         ...prevExpenses,
-        [updatedExpense.time_created_at]: updatedExpense
+        [updatedExpense.id]: updatedExpense
       }));
 
       // Should be broken into a separate function but I'm short on time
       // AdjustBudgetForUser(UserTimeStamp)
       setTotalExpensesByUser(prevTotals => {
         // If the user is the same, just adjust by the difference
-        if (oldUserId === updatedExpense.user_time_created) {
+        if (oldUserId === updatedExpense.userId) {
           const userTotal = (prevTotals[oldUserId] || 0) + difference;
           return {
             ...prevTotals,
@@ -52,29 +52,29 @@ const MainScreen = () => {
         } else {
           const oldUserTotal = (prevTotals[oldUserId] || 0) - oldExpenseCost;
           // Add the updatedExpense's cost to the new user's total
-          const newUserTotal = (prevTotals[updatedExpense.user_time_created] || 0) + updatedExpense.cost;
+          const newUserTotal = (prevTotals[updatedExpense.userId] || 0) + updatedExpense.cost;
     
           return {
             ...prevTotals,
             [oldUserId]: oldUserTotal,
-            [updatedExpense.user_time_created]: newUserTotal
+            [updatedExpense.userId]: newUserTotal
           };
         }
       });
     };
     
     // Updates state when new Expense is delete
-    const handleDeleteExpense = (deletedExpenseCreatedAt) => {
+    const handleDeleteExpense = (deletedExpenseId) => {
       setExpenses(prevExpenses => {
         const updatedExpenses = { ...prevExpenses };
-        delete updatedExpenses[deletedExpenseCreatedAt];
+        delete updatedExpenses[deletedExpenseId];
         return updatedExpenses;
       });
-      const deletedExpenseCost = expenses[deletedExpenseCreatedAt].cost;
-      const userTimeCreated = expenses[deletedExpenseCreatedAt].user_time_created;
+      const deletedExpenseCost = expenses[deletedExpenseId].cost;
+      const userId = expenses[deletedExpenseId].userId;
       setTotalExpensesByUser(prevTotals => ({
         ...prevTotals,
-        [userTimeCreated]: prevTotals[userTimeCreated] - deletedExpenseCost
+        [userId]: prevTotals[userId] - deletedExpenseCost
       }));
     };
 
@@ -82,7 +82,7 @@ const MainScreen = () => {
     const handleUserChange = (updatedUser) => {
       setUsers(prevUsers => ({
         ...prevUsers,
-        [updatedUser.time_created_at]: updatedUser
+        [updatedUser.id]: updatedUser
       }));
     };
 
@@ -90,29 +90,31 @@ const MainScreen = () => {
     const handleNewUser = (newUser) => {
       setUsers(prevUsers => ({
         ...prevUsers,
-        [newUser.time_created_at]: newUser
+        [newUser.id]: newUser
       }));
     };
-    
+
     // Updates state when a user is deleted and removes all their expenses
-    const handleDeletedUser = (deletedUserTimeCreatedAt) => {
+    const handleDeletedUser = (deletedUserId) => {
       setUsers(prevUsers => {
         const updatedUsers = { ...prevUsers };
-        delete updatedUsers[deletedUserTimeCreatedAt];
+        delete updatedUsers[deletedUserId];
         return updatedUsers;
       });
     
       // Remove all expenses for that deleted user
+      console.log(expenses, "Yo")
       setExpenses(prevExpenses => {
         const updatedExpenses = { ...prevExpenses };
         for (let expenseCreatedAt in updatedExpenses) {
 
-          if (updatedExpenses[expenseCreatedAt].user_time_created === deletedUserTimeCreatedAt) {
+          if (updatedExpenses[expenseCreatedAt].userId === deletedUserId) {
             delete updatedExpenses[expenseCreatedAt];
           }
         }
         return updatedExpenses;
       });
+      console.log(expenses, "Y2")
     };
     
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableRow, Paper, Button } from '@mui/material';
 import ExpensesDialog from './ExpenseDialog';
-
+import { v4 as uuidv4 } from 'uuid';
 const Expense = ({ category, description, cost, onEdit, onDelete }) => (
   <>
     <TableCell>{category}</TableCell>
@@ -19,11 +19,9 @@ const ExpenseTable = ({ expenses, users, onAddExpense, onDeleteExpense, onUpdate
     const [selectedExpense, setSelectedExpense] = useState(null);
 
     const handleAddExpense = (newExpense) => {
-        const currentUnixTime = Math.floor(Date.now() / 1000);
-
         const updatedExpense = {
             ...newExpense,
-            time_created_at: currentUnixTime
+            id: uuidv4()
         };
         onAddExpense(updatedExpense)
         setDialogOpen(false);
@@ -31,7 +29,7 @@ const ExpenseTable = ({ expenses, users, onAddExpense, onDeleteExpense, onUpdate
 
     const handleUpdateExpense = (updatedExpense) => {
         const expenseIndex = expenses.findIndex(
-            (expense) => expense.time_created_at === updatedExpense.time_created_at
+            (expense) => expense.id === updatedExpense.id
         );
         if (expenseIndex !== -1) {
 
@@ -44,12 +42,12 @@ const ExpenseTable = ({ expenses, users, onAddExpense, onDeleteExpense, onUpdate
     };
     
 
-    const handleDeleteExpense = (expenseTimeCreatedAt) => {
+    const handleDeleteExpense = (expenseId) => {
         const updatedExpenses = expenses.filter(
-            (expense) => expense.time_created_at !== expenseTimeCreatedAt
+            (expense) => expense.id !== expenseId
         );
 
-        onDeleteExpense(expenseTimeCreatedAt)
+        onDeleteExpense(expenseId)
     };
 
     const handleEditClick = (expense) => {
@@ -70,11 +68,11 @@ const ExpenseTable = ({ expenses, users, onAddExpense, onDeleteExpense, onUpdate
             </TableHead>
             <TableBody>
             {expenses.map(expense => (
-                <TableRow key={expense.time_created_at}>
+                <TableRow key={expense.id}>
                 <Expense
                     {...expense}
                     onEdit={() => handleEditClick(expense)}
-                    onDelete={() => handleDeleteExpense(expense.time_created_at)}
+                    onDelete={() => handleDeleteExpense(expense.id)}
                 />
                 </TableRow>
             ))}

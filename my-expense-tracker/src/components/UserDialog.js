@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 import React from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
+import { v4 as uuidv4 } from 'uuid';
 
 const UserDialog = ({ isOpen, user, onClose, onSave }) => {
     const [tempUser, setTempUser] = React.useState({
         firstName: user?.firstName || "",
         lastName: user?.lastName || "",
         total_expenses: user?.total_expenses || 0,
-        time_created_at: user?.time_created_at || Math.floor(Date.now() / 1000)
+        id: uuidv4(),
     });
 
     const isValidInput = () => {
@@ -19,7 +20,7 @@ const UserDialog = ({ isOpen, user, onClose, onSave }) => {
             firstName: user?.firstName || "",
             lastName: user?.lastName || "",
             total_expenses: user?.total_expenses || 0,
-            time_created_at: user?.time_created_at || Math.floor(Date.now() / 1000) // Unix timestamp
+            id: user?.id || Math.floor(Date.now() / 1000) // Unix timestamp
           });
     }, [user]);
 
