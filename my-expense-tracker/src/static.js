@@ -36,12 +36,17 @@ const users = [
       total_expenses: 220
     }
   ];
-  
-  const expenses = [
-    { user_time_created: 1632582390000, category: 'Groceries', description: 'Weekly groceries', cost: 50.23 },
-    { user_time_created: 1632582390001, category: 'Utilities', description: 'Electricity bill', cost: 40.50 },
-    { user_time_created: 1632582390002, category: 'Transport', description: 'Gas for the car', cost: 20.75 },
-    { user_time_created: 1632582390003, category: 'Entertainment', description: 'Movie tickets', cost: 15.00 },
-  ];
-  
-  export {users, expenses};
+
+const expenses = [
+{ user_time_created: 1632582390000, category: 'Groceries', description: 'Weekly groceries', cost: 50.23 },
+{ user_time_created: 1632582390001, category: 'Utilities', description: 'Electricity bill', cost: 40.50 },
+{ user_time_created: 1632582390002, category: 'Transport', description: 'Gas for the car', cost: 20.75 },
+{ user_time_created: 1632582390003, category: 'Entertainment', description: 'Movie tickets', cost: 15.00 },
+];
+
+const CATEGORIES = [
+    "Food", 
+    "Activity", 
+    "Office Equipment"
+];
+  export {users, expenses, CATEGORIES};

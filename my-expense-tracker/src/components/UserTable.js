@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, TableBody, TableCell, TableHead, TableRow, Button, Paper, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { Table, TableBody, TableCell, TableHead, TableRow, Button, Paper } from '@mui/material';
 import UserDialog from './UserDialog';
 
 const UserTable = ({ users: initialUsers }) => {
@@ -10,7 +10,7 @@ const UserTable = ({ users: initialUsers }) => {
   const handleAddUser = (selectedUser) => {
     const firstName = selectedUser.firstName;
     const lastName = selectedUser.lastName;
-    
+
     const newUser = {
       firstName,
       lastName,
@@ -65,7 +65,7 @@ const UserTable = ({ users: initialUsers }) => {
             <TableRow key={user.time_created_at}>
               <TableCell>{user.firstName}</TableCell>
               <TableCell>{user.lastName}</TableCell>
-              <TableCell>{user.total_expenses}</TableCell>
+              <TableCell>${user.total_expenses}</TableCell>
               <TableCell>
                 <Button onClick={() => handleEditClick(user.time_created_at)}>Edit</Button>
                 <Button onClick={() => handleDeleteUser(user.time_created_at)}>Delete</Button>

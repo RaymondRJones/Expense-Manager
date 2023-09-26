@@ -9,7 +9,7 @@ const UserDialog = ({ isOpen, user, onClose, onSave }) => {
         total_expenses: user?.total_expenses || 0
     });
 
-    const isValid = () => {
+    const isValidInput = () => {
         return tempUser.firstName && tempUser.lastName;
     };
 
@@ -22,7 +22,7 @@ const UserDialog = ({ isOpen, user, onClose, onSave }) => {
     }, [user]);
 
     const handleSave = () => {
-        if (!isValid){
+        if (!isValidInput){
             return
         }
 
@@ -39,7 +39,7 @@ const UserDialog = ({ isOpen, user, onClose, onSave }) => {
         </DialogContent>
         <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={handleSave} disabled={!isValid()}>Save</Button>
+        <Button onClick={handleSave} disabled={!isValidInput()}>Save</Button>
         </DialogActions>
     </Dialog>
     );
