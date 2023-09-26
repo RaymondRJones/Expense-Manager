@@ -1,13 +1,19 @@
 # Running the project
 
+Node version v20.5.1 was used for this project.
+
 clone
 
 `git clone https://github.com/RaymondRJones/leandata-take-home.git`
 
-Cd into project directory, install and start
+Cd into project directory
 
 `cd my-expense-tracker`
+
+install
 `npm install`
+
+start the app 
 `npm start`
 
 # Summary

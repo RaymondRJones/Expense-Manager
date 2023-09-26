@@ -40,7 +40,7 @@ const MainScreen = () => {
       }));
 
       // Should be broken into a separate function but I'm short on time
-      // AdjustBudgetForUser(UserTimeStamp)
+      // AdjustBudgetForUser(userId)
       setTotalExpensesByUser(prevTotals => {
         // If the user is the same, just adjust by the difference
         if (oldUserId === updatedExpense.userId) {
