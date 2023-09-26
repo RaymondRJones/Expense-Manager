@@ -2,46 +2,46 @@ const users = [
     {
       firstName: 'John',
       lastName: 'Doe',
-      time_created_at: Math.floor(new Date('2023-09-25T09:30:00').getTime() / 1000),
+      time_created_at: 6,
       total_expenses: 100
     },
     {
       firstName: 'Jane',
       lastName: 'Smith',
-      time_created_at: Math.floor(new Date('2023-09-26T09:30:00').getTime() / 1000),
+      time_created_at: 1,
       total_expenses: 250
     },
     {
       firstName: 'Alice',
       lastName: 'Wong',
-      time_created_at: Math.floor(new Date('2023-09-27T09:30:00').getTime() / 1000),
+      time_created_at: 2,
       total_expenses: 320
     },
     {
       firstName: 'Bob',
       lastName: 'Johnson',
-      time_created_at: Math.floor(new Date('2023-09-28T09:30:00').getTime() / 1000),
+      time_created_at: 3,
       total_expenses: 50
     },
     {
       firstName: 'Charlie',
       lastName: 'Brown',
-      time_created_at: Math.floor(new Date('2023-09-29T09:30:00').getTime() / 1000),
+      time_created_at: 4,
       total_expenses: 175
     },
     {
       firstName: 'Diana',
       lastName: 'Ross',
-      time_created_at: Math.floor(new Date('2023-08-02T09:30:00').getTime() / 1000),
+      time_created_at: 5,
       total_expenses: 220
     }
   ];
 
 const expenses = [
-{ user_time_created: 1695652200, category: 'Groceries', description: 'Weekly groceries', cost: 50.23 },
-{ user_time_created: 1695652200, category: 'Utilities', description: 'Electricity bill', cost: 40.50 },
-{ user_time_created: 1695652200, category: 'Transport', description: 'Gas for the car', cost: 20.75 },
-{ user_time_created: 1695652200, category: 'Entertainment', description: 'Movie tickets', cost: 15.00 },
+{ user_time_created: 5, category: 'Groceries', description: 'Weekly groceries', cost: 50.23, time_created_at: 1 },
+{ user_time_created: 4, category: 'Utilities', description: 'Electricity bill', cost: 40.50, time_created_at: 2 },
+{ user_time_created: 3, category: 'Transport', description: 'Gas for the car', cost: 20.75, time_created_at: 3 },
+{ user_time_created: 2, category: 'Entertainment', description: 'Movie tickets', cost: 15.00, time_created_at: 4 },
 ];
 
 const CATEGORIES = [

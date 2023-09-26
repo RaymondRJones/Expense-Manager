@@ -20,17 +20,24 @@ const ExpenseTable = ({ expenses: initialExpenses, users, onAddExpense }) => {
     const [expenses, setExpenses] = useState(initialExpenses);
 
     const handleAddExpense = (newExpense) => {
-        setExpenses([...expenses, newExpense]);
-        console.log(expenses, "hi")
-        onAddExpense(newExpense)
+        // Get current Unix timestamp
+        const currentUnixTime = Math.floor(Date.now() / 1000);
+
+        const updatedExpense = {
+            ...newExpense,
+            time_created_at: currentUnixTime
+        };
+        setExpenses([...expenses, updatedExpense]);
+        onAddExpense(updatedExpense);
         setDialogOpen(false);
     };
 
     const handleUpdateExpense = (updatedExpense) => {
-
+        console.log("updating..", updatedExpense)
         const expenseIndex = expenses.findIndex(
             (expense) => expense.user_time_created === updatedExpense.user_time_created
         );
+        console.log(expenseIndex);
         if (expenseIndex !== -1) {
 
             const updatedExpenses = [...expenses];
@@ -69,11 +76,11 @@ const ExpenseTable = ({ expenses: initialExpenses, users, onAddExpense }) => {
             </TableHead>
             <TableBody>
             {expenses.map(expense => (
-                <TableRow key={expense.user_time_created}>
+                <TableRow key={expense.time_created_at}>
                 <Expense
                     {...expense}
                     onEdit={() => handleEditClick(expense)}
-                    onDelete={() => handleDeleteExpense(expense.user_time_created)}
+                    onDelete={() => handleDeleteExpense(expense.time_created_at)}
                 />
                 </TableRow>
             ))}
