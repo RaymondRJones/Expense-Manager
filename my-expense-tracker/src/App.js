@@ -10,19 +10,61 @@ const App = () => {
     const [usersState, setUsersState] = useState(users);
     const [expensesState, setExpensesState] = useState(expenses);
     const [memoizedTotalExpenses, setMemoizedTotalExpenses] = useState({});
-  
+
+    useEffect(() => {
+      // Calculate initial totals
+      const initialTotals = Object.values(expensesState).reduce((acc, expense) => {
+        acc[expense.user_time_created] = (acc[expense.user_time_created] || 0) + expense.cost;
+        return acc;
+      }, {});
+    
+      setMemoizedTotalExpenses(initialTotals);
+    }, [expenses]);
+    
     const handleAddExpense = (newExpense) => {
       setExpensesState(prevExpenses => ({
         ...prevExpenses,
         [newExpense.time_created_at]: newExpense
       }));
+
+      setMemoizedTotalExpenses(prevTotals => ({
+        ...prevTotals,
+        [newExpense.user_time_created]: (prevTotals[newExpense.user_time_created] || 0) + newExpense.cost
+      }));
     };
     
     const handleUpdateExpense = (updatedExpense) => {
+      const oldExpense = expensesState[updatedExpense.time_created_at];
+      const oldExpenseCost = oldExpense.cost;
+      const oldUserId = oldExpense.user_time_created;
+      const difference = updatedExpense.cost - oldExpenseCost;
+    
       setExpensesState(prevExpenses => ({
         ...prevExpenses,
         [updatedExpense.time_created_at]: updatedExpense
       }));
+    
+      setMemoizedTotalExpenses(prevTotals => {
+        // If the user is the same, just adjust by the difference
+        if (oldUserId === updatedExpense.user_time_created) {
+          const userTotal = (prevTotals[oldUserId] || 0) + difference;
+          return {
+            ...prevTotals,
+            [oldUserId]: userTotal
+          };
+        } else {
+          // Subtract the difference from the old user's total
+          const oldUserTotal = (prevTotals[oldUserId] || 0) - oldExpenseCost;
+          // Add the updatedExpense's cost to the new user's total
+          const newUserTotal = (prevTotals[updatedExpense.user_time_created] || 0) + updatedExpense.cost;
+    
+          return {
+            ...prevTotals,
+            [oldUserId]: oldUserTotal,
+            [updatedExpense.user_time_created]: newUserTotal
+          };
+        }
+      });
     };
     
     const handleDeleteExpense = (deletedExpenseCreatedAt) => {
@@ -31,6 +73,12 @@ const App = () => {
         delete updatedExpenses[deletedExpenseCreatedAt];
         return updatedExpenses;
       });
+      const deletedExpenseCost = expensesState[deletedExpenseCreatedAt].cost;
+      const userTimeCreated = expensesState[deletedExpenseCreatedAt].user_time_created;
+      setMemoizedTotalExpenses(prevTotals => ({
+        ...prevTotals,
+        [userTimeCreated]: prevTotals[userTimeCreated] - deletedExpenseCost
+      }));
     };
     
     const handleUserChange = (updatedUser) => {
@@ -89,7 +137,7 @@ const App = () => {
               <Typography variant="h6" align="center" gutterBottom>
                 Users
               </Typography>
-              <UserTable users={Object.values(usersState)} onUserChange={handleUserChange} onUserCreation={handleNewUser} onUserDeletion={handleDeletedUser} expenses={Object.values(expensesState)}/>
+              <UserTable users={Object.values(usersState)} onUserChange={handleUserChange} onUserCreation={handleNewUser} onUserDeletion={handleDeletedUser} expenses={Object.values(expensesState)} memoExpenses={memoizedTotalExpenses}/>
             </Paper>
           </Grid>
         </Grid>

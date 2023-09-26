@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableRow, Button, Paper } from '@mui/material';
 import UserDialog from './UserDialog';
 
-const UserTable = ({ users: initialUsers, onUserChange, onUserCreation, onUserDeletion, expenses }) => {
+const UserTable = ({ users: initialUsers, onUserChange, onUserCreation, onUserDeletion, expenses, memoExpenses }) => {
   const [users, setUsers] = useState(initialUsers);
   const [selectedUser, setSelectedUser] = useState(null);
   const [isDialogOpen, setDialogOpen] = useState(false);
@@ -77,7 +77,7 @@ const UserTable = ({ users: initialUsers, onUserChange, onUserCreation, onUserDe
             <TableRow key={user.time_created_at}>
               <TableCell>{user.firstName}</TableCell>
               <TableCell>{user.lastName}</TableCell>
-              <TableCell>${calculateTotalExpensesForUser(user.time_created_at)}</TableCell>
+              <TableCell>${memoExpenses[user.time_created_at] || 0}</TableCell>
               <TableCell>
                 <Button onClick={() => handleEditClick(user.time_created_at)}>Edit</Button>
                 <Button onClick={() => handleDeleteUser(user.time_created_at)}>Delete</Button>
