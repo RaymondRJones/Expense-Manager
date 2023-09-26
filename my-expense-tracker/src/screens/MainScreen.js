@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import UserTable from './components/UserTable';
-import ExpenseTable from './components/ExpenseTable';
-import ExpenseSummary from './components/ExpenseSummary';
-import { computeInitialTotals} from './util/expenseHelpers';
-import {USERS, EXPENSES} from './static'
+import UserTable from '../components/UserTable';
+import ExpenseTable from '../components/ExpenseTable';
+import ExpenseSummary from '../components/ExpenseSummary';
+import { computeInitialTotals} from '../util/expenseHelpers';
+import {USERS, EXPENSES} from '../static'
 import { Container, Grid, Typography, Paper } from '@mui/material';
 
 const MainScreen = () => {
@@ -103,7 +103,6 @@ const MainScreen = () => {
       });
     
       // Remove all expenses for that deleted user
-      console.log(expenses, "Yo")
       setExpenses(prevExpenses => {
         const updatedExpenses = { ...prevExpenses };
         for (let expenseCreatedAt in updatedExpenses) {
@@ -114,7 +113,6 @@ const MainScreen = () => {
         }
         return updatedExpenses;
       });
-      console.log(expenses, "Y2")
     };
     
 

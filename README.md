@@ -14,29 +14,31 @@ Cd into project directory, install and start
 
 This application is an expense tracker as a single page application.
 
-It's comprised of a User Management section that allows adding, editing, and deleting of users while displaying their total expenses. It has an Expense Management section that allows adding, editing, and deleting of expenses. Changes to expenses show immediate changes to the user's total expenses. Finally, there's an expense summary section that displays the spending categories by their totals. 
+It's made of three main components. First, a User Management section that allows adding, editing, and deleting of users while displaying their total expenses. Second, it has an Expense Management section that allows adding, editing, and deleting of expenses. Changes to expenses show immediate changes to the user's total expenses. Finally, there's an expense summary section that displays the spending categories by their totals. 
 
-This project was coded using react and styled using the materials UI. 
+This project was coded using react and styled using the materials UI. The rest of this document will detail design tradeoffs and some notes how components were made.  
 
 # Design Tradeoffs
 
-For the component design, there's a parent function called MainScreen which holds the three components mentioned in the summary. The MainScreen component initializes dummy data using constants made in static.js. It tracks all the changes to Users and Expenses and passes the data down so that state is consistent as changes occur. 
+For the component design, a parent componet is used to hold and structure the three sections. MainScreen.js defines this component. The MainScreen component initializes dummy data using constants made in static.js. It tracks all the changes to Users and Expenses and passes the data down so that state is consistent as changes occur. 
+
+Upon reading this code, you will notice two big design decisions that affect the time complexity of this application.
 
 **Hash Map vs. Array**
 
-A hashmap was used because it has O(1) insertions, edits, and deletions. An array could also be used but it limited to O(1) amortized time complexity for adding a new user. The array would need to double in size several times, or be instantiated at a really large size. The other problem with using an array of users and expenses is that they need their own IDs.
+A hashmap was used because it is O(1) for insertions, edits, and deletions. An array could also be used but it limited to O(1) amortized time complexity for adding a new user. The array would need to double in size several times, or be instantiated at a really large size to match the hashmap. The other problem with using an array of users and expenses is that they need their own IDs.
 
-If the dataset is quite large, as described in the project email description, generating a series of IDs can get difficult. 
+If the dataset is quite large, as described in the project email description, generating a series of indexes can get difficult. 
 
-For these reasons, a hashmap was chosen to hold the users and expenses data. Although, it's worth noting that an array can be an excellent choice if there's no care of having empty memory or userID conflicts by importing a library to handle it. 
+For these reasons, a hashmap was chosen to hold the users and expenses data. Although, it's worth noting that an array can be an excellent choice if there's no care of having empty memory or userID conflicts by importing a library or server to handle ID incrementation. Also, a hashmap can still have hashing conflicts that can make is O(N) for adding, editing, and deleting if the hasing algorithm is poor quality. In most cases, I believe the hashmap will be quite strong for performance. 
 
 **Primary Keys: Timestamps vs. IDs**
 
-React requires each list item to have it's own primary key. IDs are great and there's libraries that can create stable ID generation. I decided to go with using timestamps as the primary, unique key for users and expenses. 
+React requires each list item to have it's own primary key, and it doesn't like using list index's as primary keys because lists can often change. An ID generation tool is great, and there's libraries that can create stable ID generation. Using sequential order can create conflicts if two users are created at the same time. Because of this, I used the uuid library that will structure ID's like `f47ac10b-58cc-4372-a567-0e02b2c3d479`
 
-I did this because I wanted to create this application quite quickly. Given more time, importing an ID library is likely the best because it can handle conflicts very well. Theoretically, if several users are using this application and it gets connected to a backend in the future, two users could have several timestamps. And most users likely won't be using the application from 2AM to 6AM for example.
+Another consideration was using timestamps which are close to random and have a low chance of conflicts. Timestamps for unique IDs fails when we have a large scale of users and several are created at the same time. Also, most users won't be online from 12AM to 6AM, so the possible numbers are even more limited. 
 
-Overall, I would switch to an ID generation library and use that as the primary, unique keys of the hashmap. 
+Importing an id library takes a little more time and risks having an extra dependency in the application. However, it's the best method for preventing any conflicts, so I used it for this application.
 
 # Component Design
 
