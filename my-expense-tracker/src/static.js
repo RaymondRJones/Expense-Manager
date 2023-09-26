@@ -38,10 +38,10 @@ const users = [
   ];
 
 const expenses = [
-{ user_time_created: 5, category: 'Groceries', description: 'Weekly groceries', cost: 50.23, time_created_at: 1 },
-{ user_time_created: 4, category: 'Utilities', description: 'Electricity bill', cost: 40.50, time_created_at: 2 },
-{ user_time_created: 3, category: 'Transport', description: 'Gas for the car', cost: 20.75, time_created_at: 3 },
-{ user_time_created: 2, category: 'Entertainment', description: 'Movie tickets', cost: 15.00, time_created_at: 4 },
+  { user_time_created: 5, category: 'Food', description: 'Weekly groceries', cost: 50.23, time_created_at: 1 },
+  { user_time_created: 4, category: 'Activity', description: 'Electricity bill', cost: 40.50, time_created_at: 2 },
+  { user_time_created: 3, category: 'Food', description: 'Gas for the car', cost: 20.75, time_created_at: 3 },
+  { user_time_created: 2, category: 'Activity', description: 'Movie tickets', cost: 15.00, time_created_at: 4 },
 ];
 
 const CATEGORIES = [

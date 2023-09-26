@@ -6,7 +6,8 @@ const UserDialog = ({ isOpen, user, onClose, onSave }) => {
     const [tempUser, setTempUser] = React.useState({
         firstName: user?.firstName || "",
         lastName: user?.lastName || "",
-        total_expenses: user?.total_expenses || 0
+        total_expenses: user?.total_expenses || 0,
+        time_created_at: user?.time_created_at || Math.floor(Date.now() / 1000)
     });
 
     const isValidInput = () => {
@@ -17,7 +18,8 @@ const UserDialog = ({ isOpen, user, onClose, onSave }) => {
         setTempUser({
             firstName: user?.firstName || "",
             lastName: user?.lastName || "",
-            total_expenses: user?.total_expenses || 0
+            total_expenses: user?.total_expenses || 0,
+            time_created_at: user?.time_created_at || Math.floor(Date.now() / 1000) // Unix timestamp
           });
     }, [user]);
 

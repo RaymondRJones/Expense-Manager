@@ -90,7 +90,7 @@ const ExpenseTable = ({ expenses: initialExpenses, users, onAddExpense }) => {
             isOpen={isDialogOpen}
             onClose={() => setDialogOpen(false)}
             onSave={selectedExpense ? handleUpdateExpense : handleAddExpense}
-            expense={selectedExpense}
+            expense={selectedExpense || null}
             users={users}
         />
         </Paper>

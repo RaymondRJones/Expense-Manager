@@ -14,7 +14,7 @@ import {
 import {CATEGORIES} from '../static';
 
 const defaultExpenseData = {
-  user: '',
+  user_time_created: '',
   category: '',
   description: '',
   cost: 0,
@@ -25,6 +25,7 @@ const ExpenseDialog = ({ isOpen, onClose, onSave, expense, users}) => {
       ...defaultExpenseData,
       ...(expense || {}),
     });
+  
 
     useEffect(() => {
       setExpenseData(expense ? { ...expense } : defaultExpenseData);
@@ -47,7 +48,7 @@ const ExpenseDialog = ({ isOpen, onClose, onSave, expense, users}) => {
             <InputLabel id="user-dropdown-label">User</InputLabel>
             <Select
               labelId="user-dropdown-label"
-              value={expenseData.user}
+              value={expenseData.user_time_created}
               onChange={(e) => setExpenseData({ ...expenseData, user: e.target.value })}
             >
               {users.map(user => (
@@ -65,8 +66,8 @@ const ExpenseDialog = ({ isOpen, onClose, onSave, expense, users}) => {
               value={expenseData.category}
               onChange={(e) => setExpenseData({ ...expenseData, category: e.target.value })}
             >
-              {CATEGORIES.map(category => (
-                <MenuItem key={category} value={category}>
+              {CATEGORIES.map((category, index) => (
+                <MenuItem key={index} value={category}>
                   {category}
                 </MenuItem>
               ))}
