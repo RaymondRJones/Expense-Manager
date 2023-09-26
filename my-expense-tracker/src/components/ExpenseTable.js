@@ -3,7 +3,7 @@ import { Table, TableBody, TableCell, TableHead, TableRow, Paper, Button } from 
 import ExpensesDialog from './ExpenseDialog';
 
 const Expense = ({ category, description, cost, onEdit, onDelete }) => (
-  <React.Fragment>
+  <>
     <TableCell>{category}</TableCell>
     <TableCell>{description}</TableCell>
     <TableCell>{cost.toFixed(2)}</TableCell>
@@ -11,7 +11,7 @@ const Expense = ({ category, description, cost, onEdit, onDelete }) => (
       <Button onClick={onEdit}>Edit</Button>
       <Button onClick={onDelete}>Delete</Button>
     </TableCell>
-  </React.Fragment>
+  </>
 );
 
 const ExpenseTable = ({ expenses, users, onAddExpense, onDeleteExpense, onUpdateExpense }) => {

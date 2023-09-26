@@ -38,6 +38,8 @@ I did this because I wanted to create this application quite quickly. Given more
 
 Overall, I would switch to an ID generation library and use that as the primary, unique keys of the hashmap. 
 
+# Component Design
+
 #### Component Design - User Management
 
 Another big decision for react applications is deciding how the component hierarchy should be structured. Instead of having a single user component, I chose to break it into two components, one for the input form and one that displays the table of user data. 

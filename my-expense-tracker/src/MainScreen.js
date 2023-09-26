@@ -3,46 +3,45 @@ import UserTable from './components/UserTable';
 import ExpenseTable from './components/ExpenseTable';
 import ExpenseSummary from './components/ExpenseSummary';
 import { computeInitialTotals} from './util/expenseHelpers';
-import {users, expenses} from './static'
+import {USERS, EXPENSES} from './static'
 import { Container, Grid, Typography, Paper } from '@mui/material';
 
 const MainScreen = () => {
-    // Closer to O(1) using a hash map for state
-    const [usersState, setUsersState] = useState(users);
-    const [expensesState, setExpensesState] = useState(expenses);
-    const [memoizedTotalExpenses, setMemoizedTotalExpenses] = useState({});
+    const [users, setUsers] = useState(USERS);
+    const [expenses, setExpenses] = useState(EXPENSES);
+    const [totalExpensesByUser, setTotalExpensesByUser] = useState({});
 
     useEffect(() => {
-      setMemoizedTotalExpenses(computeInitialTotals(expensesState));
+      setTotalExpensesByUser(computeInitialTotals(expenses));
     }, [expenses]);
 
-    // one pass to copy entire expenses and add expense
+    // Updates state when new Expense is added
     const handleAddExpense = (newExpense) => {
-      setExpensesState(prevExpenses => ({
+      setExpenses(prevExpenses => ({
         ...prevExpenses,
         [newExpense.time_created_at]: newExpense
       }));
 
-      setMemoizedTotalExpenses(prevTotals => ({
+      setTotalExpensesByUser(prevTotals => ({
         ...prevTotals,
         [newExpense.user_time_created]: (prevTotals[newExpense.user_time_created] || 0) + newExpense.cost
       }));
     };
-    
+    // Updates state when new Expense is edited
     const handleUpdateExpense = (updatedExpense) => {
-      const oldExpense = expensesState[updatedExpense.time_created_at];
+      const oldExpense = expenses[updatedExpense.time_created_at];
       const oldExpenseCost = oldExpense.cost;
       const oldUserId = oldExpense.user_time_created;
       const difference = updatedExpense.cost - oldExpenseCost;
     
-      setExpensesState(prevExpenses => ({
+      setExpenses(prevExpenses => ({
         ...prevExpenses,
         [updatedExpense.time_created_at]: updatedExpense
       }));
 
       // Should be broken into a separate function but I'm short on time
       // AdjustBudgetForUser(UserTimeStamp)
-      setMemoizedTotalExpenses(prevTotals => {
+      setTotalExpensesByUser(prevTotals => {
         // If the user is the same, just adjust by the difference
         if (oldUserId === updatedExpense.user_time_created) {
           const userTotal = (prevTotals[oldUserId] || 0) + difference;
@@ -63,44 +62,44 @@ const MainScreen = () => {
         }
       });
     };
-    
+    // Updates state when new Expense is delete
     const handleDeleteExpense = (deletedExpenseCreatedAt) => {
-      setExpensesState(prevExpenses => {
+      setExpenses(prevExpenses => {
         const updatedExpenses = { ...prevExpenses };
         delete updatedExpenses[deletedExpenseCreatedAt];
         return updatedExpenses;
       });
-      const deletedExpenseCost = expensesState[deletedExpenseCreatedAt].cost;
-      const userTimeCreated = expensesState[deletedExpenseCreatedAt].user_time_created;
-      setMemoizedTotalExpenses(prevTotals => ({
+      const deletedExpenseCost = expenses[deletedExpenseCreatedAt].cost;
+      const userTimeCreated = expenses[deletedExpenseCreatedAt].user_time_created;
+      setTotalExpensesByUser(prevTotals => ({
         ...prevTotals,
         [userTimeCreated]: prevTotals[userTimeCreated] - deletedExpenseCost
       }));
     };
-    
+    // Updates state when a user changes
     const handleUserChange = (updatedUser) => {
-      setUsersState(prevUsers => ({
+      setUsers(prevUsers => ({
         ...prevUsers,
         [updatedUser.time_created_at]: updatedUser
       }));
     };
-    
+    // Updates state when a new user is added
     const handleNewUser = (newUser) => {
-      setUsersState(prevUsers => ({
+      setUsers(prevUsers => ({
         ...prevUsers,
         [newUser.time_created_at]: newUser
       }));
     };
-    
+    // Updates state when a user is deleted and removes all their expenses
     const handleDeletedUser = (deletedUserTimeCreatedAt) => {
-      setUsersState(prevUsers => {
+      setUsers(prevUsers => {
         const updatedUsers = { ...prevUsers };
         delete updatedUsers[deletedUserTimeCreatedAt];
         return updatedUsers;
       });
     
       // Remove all expenses for that deleted user
-      setExpensesState(prevExpenses => {
+      setExpenses(prevExpenses => {
         const updatedExpenses = { ...prevExpenses };
         for (let expenseCreatedAt in updatedExpenses) {
 
@@ -125,7 +124,7 @@ const MainScreen = () => {
               <Typography variant="h6" align="center" gutterBottom>
                 Expenses
               </Typography>
-              <ExpenseTable expenses={Object.values(expensesState)} users={Object.values(usersState)} onAddExpense={handleAddExpense} onDeleteExpense={handleDeleteExpense} onUpdateExpense={handleUpdateExpense}/>
+              <ExpenseTable expenses={Object.values(expenses)} users={Object.values(users)} onAddExpense={handleAddExpense} onDeleteExpense={handleDeleteExpense} onUpdateExpense={handleUpdateExpense}/>
             </Paper>
           </Grid>
 
@@ -134,12 +133,13 @@ const MainScreen = () => {
               <Typography variant="h6" align="center" gutterBottom>
                 Users
               </Typography>
-              <UserTable users={Object.values(usersState)} onUserChange={handleUserChange} onUserCreation={handleNewUser} onUserDeletion={handleDeletedUser} expenses={Object.values(expensesState)} memoExpenses={memoizedTotalExpenses}/>
+              <UserTable users={Object.values(users)} onUserChange={handleUserChange} onUserCreation={handleNewUser} onUserDeletion={handleDeletedUser} expenses={Object.values(expenses)} memoExpenses={totalExpensesByUser}/>
             </Paper>
           </Grid>
         </Grid>
+
         <Grid item xs={12} md={6}>
-          <ExpenseSummary expenses={Object.values(expensesState)} />
+          <ExpenseSummary expenses={Object.values(expenses)} />
         </Grid>
       </Container>
     );
