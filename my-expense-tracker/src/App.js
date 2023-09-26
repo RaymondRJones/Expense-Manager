@@ -11,18 +11,17 @@ const App = () => {
     // Could maybe add these into a helper file to simplify this component
     const handleAddExpense = (newExpense) => {
       setExpensesState(prevExpenses => [...prevExpenses, newExpense]);
-      const userToUpdate = usersState.find(user => user.time_created_at === newExpense.user_time_created);
-      if (userToUpdate) {
-        userToUpdate.total_expenses += newExpense.cost;
-        setUsersState(prevUsers => 
-          prevUsers.map(user => 
-            user.id === userToUpdate.id ? userToUpdate : user
-          )
-        );
-      }
-
     };
-    const updateAllExpenses = (updatedExpenses) => {
+    const handleUpdateExpense = (updatedExpense) => {
+      setExpensesState(prevExpenses => 
+        prevExpenses.map(expense => 
+          expense.time_created_at === updatedExpense.time_created_at ? updatedExpense : expense
+        )
+      );
+    };
+    const handleDeleteExpense = (deletedExpenseCreatedAt) => {
+      const updatedExpenses = expensesState.filter(expense => expense.time_created_at !== deletedExpenseCreatedAt);
+
       setExpensesState(updatedExpenses);
     };
 
@@ -43,8 +42,7 @@ const App = () => {
       const updatedUsers = usersState.filter(user => user.time_created_at !== deletedUserTimeCreatedAt);
       setUsersState(updatedUsers);
     
-      // Remove all expenses related to the deleted user
-      
+      // Remove all expenses for that deleted user
       const updatedExpenses = expensesState.filter(expense => expense.user_time_created !== deletedUserTimeCreatedAt);
       console.log(updatedExpenses)
       setExpensesState(updatedExpenses);
@@ -62,7 +60,7 @@ const App = () => {
               <Typography variant="h6" align="center" gutterBottom>
                 Expenses
               </Typography>
-              <ExpenseTable expenses={expensesState} users={usersState} onAddExpense={handleAddExpense} updateExpenses={updateAllExpenses}/>
+              <ExpenseTable expenses={expensesState} users={usersState} onAddExpense={handleAddExpense} onDeleteExpense={handleDeleteExpense} onUpdateExpense={handleUpdateExpense}/>
             </Paper>
           </Grid>
 
