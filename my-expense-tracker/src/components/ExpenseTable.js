@@ -14,10 +14,9 @@ const Expense = ({ category, description, cost, onEdit, onDelete }) => (
   </React.Fragment>
 );
 
-const ExpenseTable = ({ expenses: initialExpenses, users, onAddExpense, onDeleteExpense, onUpdateExpense }) => {
+const ExpenseTable = ({ expenses, users, onAddExpense, onDeleteExpense, onUpdateExpense }) => {
     const [isDialogOpen, setDialogOpen] = useState(false);
     const [selectedExpense, setSelectedExpense] = useState(null);
-    const [expenses, setExpenses] = useState(initialExpenses);
 
     const handleAddExpense = (newExpense) => {
         const currentUnixTime = Math.floor(Date.now() / 1000);
@@ -26,7 +25,6 @@ const ExpenseTable = ({ expenses: initialExpenses, users, onAddExpense, onDelete
             ...newExpense,
             time_created_at: currentUnixTime
         };
-        setExpenses([...expenses, updatedExpense]);
         onAddExpense(updatedExpense)
         setDialogOpen(false);
     };
@@ -40,7 +38,6 @@ const ExpenseTable = ({ expenses: initialExpenses, users, onAddExpense, onDelete
             const updatedExpenses = [...expenses];
             updatedExpenses[expenseIndex] = updatedExpense;
         
-            setExpenses(updatedExpenses);
             onUpdateExpense(updatedExpense)
         }
         setDialogOpen(false);
@@ -48,12 +45,10 @@ const ExpenseTable = ({ expenses: initialExpenses, users, onAddExpense, onDelete
     
 
     const handleDeleteExpense = (expenseTimeCreatedAt) => {
-
         const updatedExpenses = expenses.filter(
             (expense) => expense.time_created_at !== expenseTimeCreatedAt
         );
 
-        setExpenses(updatedExpenses);
         onDeleteExpense(expenseTimeCreatedAt)
     };
 

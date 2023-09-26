@@ -6,47 +6,67 @@ import {users, expenses} from './static'
 import { Container, Grid, Typography, Paper } from '@mui/material';
 
 const App = () => {
+    // Uses Hashmap to use O(1) add, update, and delete with O(N) space
     const [usersState, setUsersState] = useState(users);
     const [expensesState, setExpensesState] = useState(expenses);
-    // Could maybe add these into a helper file to simplify this component
+    const [memoizedTotalExpenses, setMemoizedTotalExpenses] = useState({});
+  
     const handleAddExpense = (newExpense) => {
-      setExpensesState(prevExpenses => [...prevExpenses, newExpense]);
+      setExpensesState(prevExpenses => ({
+        ...prevExpenses,
+        [newExpense.time_created_at]: newExpense
+      }));
     };
+    
     const handleUpdateExpense = (updatedExpense) => {
-      setExpensesState(prevExpenses => 
-        prevExpenses.map(expense => 
-          expense.time_created_at === updatedExpense.time_created_at ? updatedExpense : expense
-        )
-      );
+      setExpensesState(prevExpenses => ({
+        ...prevExpenses,
+        [updatedExpense.time_created_at]: updatedExpense
+      }));
     };
+    
     const handleDeleteExpense = (deletedExpenseCreatedAt) => {
-      const updatedExpenses = expensesState.filter(expense => expense.time_created_at !== deletedExpenseCreatedAt);
-
-      setExpensesState(updatedExpenses);
+      setExpensesState(prevExpenses => {
+        const updatedExpenses = { ...prevExpenses };
+        delete updatedExpenses[deletedExpenseCreatedAt];
+        return updatedExpenses;
+      });
     };
-
+    
     const handleUserChange = (updatedUser) => {
-      const updatedUsers = usersState.map(user => 
-          user.time_created_at === updatedUser.time_created_at ? updatedUser : user
-      );
-      setUsersState(updatedUsers);
-    }
-
+      setUsersState(prevUsers => ({
+        ...prevUsers,
+        [updatedUser.time_created_at]: updatedUser
+      }));
+    };
+    
     const handleNewUser = (newUser) => {
-      setUsersState(prevUsers => [...prevUsers, newUser]);
-    }
-
+      setUsersState(prevUsers => ({
+        ...prevUsers,
+        [newUser.time_created_at]: newUser
+      }));
+    };
+    
     const handleDeletedUser = (deletedUserTimeCreatedAt) => {
-      console.log(expensesState, "before")
-      // Remove the user from the usersState
-      const updatedUsers = usersState.filter(user => user.time_created_at !== deletedUserTimeCreatedAt);
-      setUsersState(updatedUsers);
+      setUsersState(prevUsers => {
+        const updatedUsers = { ...prevUsers };
+        delete updatedUsers[deletedUserTimeCreatedAt];
+        return updatedUsers;
+      });
     
       // Remove all expenses for that deleted user
-      const updatedExpenses = expensesState.filter(expense => expense.user_time_created !== deletedUserTimeCreatedAt);
-      console.log(updatedExpenses)
-      setExpensesState(updatedExpenses);
-    }
+      setExpensesState(prevExpenses => {
+        const updatedExpenses = { ...prevExpenses };
+        for (let expenseCreatedAt in updatedExpenses) {
+
+          if (updatedExpenses[expenseCreatedAt].user_time_created === deletedUserTimeCreatedAt) {
+            delete updatedExpenses[expenseCreatedAt];
+          }
+        }
+        return updatedExpenses;
+      });
+    };
+    
 
     return (
       <Container maxWidth="lg" className="main-container">
@@ -60,7 +80,7 @@ const App = () => {
               <Typography variant="h6" align="center" gutterBottom>
                 Expenses
               </Typography>
-              <ExpenseTable expenses={expensesState} users={usersState} onAddExpense={handleAddExpense} onDeleteExpense={handleDeleteExpense} onUpdateExpense={handleUpdateExpense}/>
+              <ExpenseTable expenses={Object.values(expensesState)} users={Object.values(usersState)} onAddExpense={handleAddExpense} onDeleteExpense={handleDeleteExpense} onUpdateExpense={handleUpdateExpense}/>
             </Paper>
           </Grid>
 
@@ -69,12 +89,12 @@ const App = () => {
               <Typography variant="h6" align="center" gutterBottom>
                 Users
               </Typography>
-              <UserTable users={usersState} onUserChange={handleUserChange} onUserCreation={handleNewUser} onUserDeletion={handleDeletedUser} expenses={expensesState}/>
+              <UserTable users={Object.values(usersState)} onUserChange={handleUserChange} onUserCreation={handleNewUser} onUserDeletion={handleDeletedUser} expenses={Object.values(expensesState)}/>
             </Paper>
           </Grid>
         </Grid>
         <Grid item xs={12} md={6}>
-          <ExpenseSummary expenses={expensesState} />
+          <ExpenseSummary expenses={Object.values(expensesState)} />
         </Grid>
       </Container>
     );

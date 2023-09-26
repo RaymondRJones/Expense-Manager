@@ -23,6 +23,7 @@ const UserTable = ({ users: initialUsers, onUserChange, onUserCreation, onUserDe
     onUserCreation(newUser);
     handleClose();
   };
+
    // O(N) on initial load
    // Can make it O(1) on expense delete/create by using indexed array or hash_map
   const calculateTotalExpensesForUser = (user_time_created) => {
