@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import UserTable from './components/UserTable';
 import ExpenseTable from './components/ExpenseTable';
+import ExpenseSummary from './components/ExpenseSummary';
 import {users, expenses} from './static'
 import { Container, Grid, Typography, Paper } from '@mui/material';
 
@@ -73,6 +74,9 @@ const App = () => {
               <UserTable users={usersState} onUserChange={handleUserChange} onUserCreation={handleNewUser} onUserDeletion={handleDeletedUser} expenses={expensesState}/>
             </Paper>
           </Grid>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <ExpenseSummary expenses={expensesState} />
         </Grid>
       </Container>
     );
