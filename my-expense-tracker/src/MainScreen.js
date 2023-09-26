@@ -6,7 +6,7 @@ import { computeInitialTotals} from './util/expenseHelpers';
 import {users, expenses} from './static'
 import { Container, Grid, Typography, Paper } from '@mui/material';
 
-const App = () => {
+const MainScreen = () => {
     // Closer to O(1) using a hash map for state
     const [usersState, setUsersState] = useState(users);
     const [expensesState, setExpensesState] = useState(expenses);
@@ -39,7 +39,9 @@ const App = () => {
         ...prevExpenses,
         [updatedExpense.time_created_at]: updatedExpense
       }));
-    
+
+      // Should be broken into a separate function but I'm short on time
+      // AdjustBudgetForUser(UserTimeStamp)
       setMemoizedTotalExpenses(prevTotals => {
         // If the user is the same, just adjust by the difference
         if (oldUserId === updatedExpense.user_time_created) {
@@ -49,7 +51,6 @@ const App = () => {
             [oldUserId]: userTotal
           };
         } else {
-          // Subtract the difference from the old user's total
           const oldUserTotal = (prevTotals[oldUserId] || 0) - oldExpenseCost;
           // Add the updatedExpense's cost to the new user's total
           const newUserTotal = (prevTotals[updatedExpense.user_time_created] || 0) + updatedExpense.cost;
@@ -144,4 +145,4 @@ const App = () => {
     );
 }
 
-export default App;
+export default MainScreen;
