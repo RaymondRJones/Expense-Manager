@@ -3,12 +3,15 @@ import { Table, TableBody, TableCell, TableHead, TableRow, Paper, Typography } f
 
 const ExpenseSummary = ({ expenses }) => {
 
-  const calculateTotalForCategory = (category) => {
-    const total = expenses.filter(exp => exp.category === category).reduce((acc, curr) => acc + curr.cost, 0);
-    return parseFloat(total.toFixed(2));
-  }
+  const totalsByCategory = expenses.reduce((acc, curr) => {
+    if (!acc[curr.category]) {
+      acc[curr.category] = 0;
+    }
+    acc[curr.category] += curr.cost;
+    return acc;
+  }, {});
 
-  const uniqueCategories = [...new Set(expenses.map(exp => exp.category))];
+  const uniqueCategories = Object.keys(totalsByCategory);
 
   return (
     <Paper elevation={3}>
@@ -26,7 +29,7 @@ const ExpenseSummary = ({ expenses }) => {
           {uniqueCategories.map(category => (
             <TableRow key={category}>
               <TableCell>{category}</TableCell>
-              <TableCell>${calculateTotalForCategory(category)}</TableCell>
+              <TableCell>${parseFloat(totalsByCategory[category].toFixed(2))}</TableCell>
             </TableRow>
           ))}
         </TableBody>
