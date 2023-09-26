@@ -43,10 +43,6 @@ const ExpenseTable = ({ expenses, users, onAddExpense, onDeleteExpense, onUpdate
     
 
     const handleDeleteExpense = (expenseId) => {
-        const updatedExpenses = expenses.filter(
-            (expense) => expense.id !== expenseId
-        );
-
         onDeleteExpense(expenseId)
     };
 
