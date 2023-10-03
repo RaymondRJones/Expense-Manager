@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableRow, Button, Paper } from '@mui/material';
 import UserDialog from './UserDialog';
 import { v4 as uuidv4 } from 'uuid';
-const UserTable = ({ users: initialUsers, onUserChange, onUserCreation, onUserDeletion, expenses, memoExpenses }) => {
-  const [users, setUsers] = useState(initialUsers);
+const UserTable = ({ users, onUserChange, onUserCreation, onUserDeletion, expenses, memoExpenses }) => {
+  //const [users, setUsers] = useState(initialUsers);
   const [selectedUser, setSelectedUser] = useState(null);
   const [isDialogOpen, setDialogOpen] = useState(false);
 
@@ -17,12 +17,13 @@ const UserTable = ({ users: initialUsers, onUserChange, onUserCreation, onUserDe
       total_expenses: 0,
       id: uuidv4(),  // generates a unique ID
     };
-    setUsers(prevUsers => [...prevUsers, newUser]);
+    //setUsers(prevUsers => [...prevUsers, newUser]);
     onUserCreation(newUser);
     handleDialogClose();
   };
 
   const handleUpdateUser = (selectedUser) => {
+    /*
     setUsers(prevUsers => {
       return prevUsers.map(user => {
         if (user.id === selectedUser.id) {
@@ -31,12 +32,13 @@ const UserTable = ({ users: initialUsers, onUserChange, onUserCreation, onUserDe
         return user;
       });
     });
+    */
     onUserChange(selectedUser)
     handleDialogClose();
   };
 
   const handleDeleteUser = (id) => {
-    setUsers(prevUsers => prevUsers.filter(user => user.id !== id));
+    //setUsers(prevUsers => prevUsers.filter(user => user.id !== id));
     onUserDeletion(id)
     setSelectedUser(null);
   };

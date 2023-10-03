@@ -2,25 +2,21 @@ import React, { useState, useEffect } from 'react';
 import UserTable from '../components/UserTable';
 import ExpenseTable from '../components/ExpenseTable';
 import ExpenseSummary from '../components/ExpenseSummary';
-import { computeInitialTotals} from '../util/expenseHelpers';
+import { computeInitialTotals, adjustBudgetForUser, adjustBudgetForUserSwitch } from '../util/expenseHelpers';
 import {USERS, EXPENSES} from '../static'
 import { Container, Grid, Typography, Paper } from '@mui/material';
+import useExpenses from '../customHooks/expenseHooks';
 
 const MainScreen = () => {
     const [users, setUsers] = useState(USERS);
-    const [expenses, setExpenses] = useState(EXPENSES);
+    const [expenses, expenseActions] = useExpenses(EXPENSES);
     const [totalExpensesByUser, setTotalExpensesByUser] = useState({});
-
     useEffect(() => {
       setTotalExpensesByUser(computeInitialTotals(expenses));
     }, [expenses]);
 
-    // Updates state when new Expense is added
     const handleAddExpense = (newExpense) => {
-      setExpenses(prevExpenses => ({
-        ...prevExpenses,
-        [newExpense.id]: newExpense
-      }));
+      expenseActions.add(newExpense);
 
       setTotalExpensesByUser(prevTotals => ({
         ...prevTotals,
@@ -33,11 +29,8 @@ const MainScreen = () => {
       const oldExpenseCost = oldExpense.cost;
       const oldUserId = oldExpense.userId;
       const difference = updatedExpense.cost - oldExpenseCost;
-    
-      setExpenses(prevExpenses => ({
-        ...prevExpenses,
-        [updatedExpense.id]: updatedExpense
-      }));
+      
+      expenseActions.update(updatedExpense)
 
       // Should be broken into a separate function but I'm short on time
       // AdjustBudgetForUser(userId)
@@ -65,17 +58,11 @@ const MainScreen = () => {
     
     // Updates state when new Expense is delete
     const handleDeleteExpense = (deletedExpenseId) => {
-      setExpenses(prevExpenses => {
-        const updatedExpenses = { ...prevExpenses };
-        delete updatedExpenses[deletedExpenseId];
-        return updatedExpenses;
-      });
       const deletedExpenseCost = expenses[deletedExpenseId].cost;
       const userId = expenses[deletedExpenseId].userId;
-      setTotalExpensesByUser(prevTotals => ({
-        ...prevTotals,
-        [userId]: prevTotals[userId] - deletedExpenseCost
-      }));
+
+      expenseActions.remove(deletedExpenseId);
+      adjustBudgetForUser(setTotalExpensesByUser, userId, -deletedExpenseCost);
     };
 
     // Updates state when a user changes
@@ -101,18 +88,10 @@ const MainScreen = () => {
         delete updatedUsers[deletedUserId];
         return updatedUsers;
       });
-    
-      // Remove all expenses for that deleted user
-      setExpenses(prevExpenses => {
-        const updatedExpenses = { ...prevExpenses };
-        for (let expenseCreatedAt in updatedExpenses) {
 
-          if (updatedExpenses[expenseCreatedAt].userId === deletedUserId) {
-            delete updatedExpenses[expenseCreatedAt];
-          }
-        }
-        return updatedExpenses;
-      });
+      // Remove all expenses for that deleted user
+      expenseActions.removeAllForUser(deletedUserId);
+
     };
     
 
