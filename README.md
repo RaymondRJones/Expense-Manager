@@ -4,7 +4,7 @@ Node version v20.5.1 was used for this project.
 
 clone
 
-`git clone https://github.com/RaymondRJones/leandata-take-home.git`
+`git clone https://github.com/RaymondRJones/Expense-tracker.git`
 
 Cd into project directory
 
