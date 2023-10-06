@@ -4,7 +4,7 @@ Node version v20.5.1 was used for this project.
 
 clone
 
-`git clone https://github.com/RaymondRJones/Expense-tracker.git`
+`git clone https://github.com/RaymondRJones/Expense-Manager.git`
 
 Cd into project directory
 
