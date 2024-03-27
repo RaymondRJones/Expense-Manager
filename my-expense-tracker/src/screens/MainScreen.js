@@ -10,7 +10,7 @@ const MainScreen = () => {
     const [users, setUsers] = useState(USERS);
     const [expenses, setExpenses] = useState(EXPENSES);
     const [totalExpensesByUser, setTotalExpensesByUser] = useState({});
-
+    
     useEffect(() => {
       setTotalExpensesByUser(computeInitialTotals(expenses));
     }, [expenses]);

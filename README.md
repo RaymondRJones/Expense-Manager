@@ -26,13 +26,13 @@ This project was coded using react and styled using the materials UI. The rest o
 
 # Design Tradeoffs
 
-For the component design, a parent componet is used to hold and structure the three sections. MainScreen.js defines this component. The MainScreen component initializes dummy data using constants made in static.js. It tracks all the changes to Users and Expenses and passes the data down so that state is consistent as changes occur. 
+For the component design, a parent component is used to hold and structure the three sections. MainScreen.js defines this component. The MainScreen component initializes dummy data using constants made in static.js. It tracks all the changes to Users and Expenses and passes the data down so that state is consistent as changes occur. 
 
 Upon reading this code, you will notice two big design decisions that affect the time complexity of this application.
 
 ### Hash Map vs. Array
 
-A hashmap was used because it is O(1) for insertions, edits, and deletions. An array could also be used but it limited to O(1) amortized time complexity for adding a new user. The array would need to double in size several times, or be instantiated at a really large size to match the hashmap. The other problem with using an array of users and expenses is that they need their own IDs.
+A hashmap was used because it is O(1) for insertions, edits, and deletions. An array could also be used but it is limited to O(1) amortized time complexity for adding a new user. The array would need to double in size several times, or be instantiated at a really large size to match the hashmap. The other problem with using an array of users and expenses is that they need their own IDs.
 
 If the dataset is quite large, as described in the project email description, generating a series of indexes can get difficult. 
 
@@ -56,7 +56,7 @@ This helped improve readability and therefore maintainability. It helped modular
 
 This has the risk of adding more files, but it will help the overall readability of the project. 
 
-This could even be abstracted further to create a general Dialog component to use for both users and expenses. But there isn't enough time for that. But it would improve the reusability for future additions to this project. 
+This could even be abstracted further to create a general Dialog component to use for both users and expenses. It would improve the reusability for future additions to this project. 
 
 ### Component Design - Expense Management
 
@@ -65,6 +65,6 @@ This follows the same idea as the User Management. To improve possible reusabili
 
 # Future Considerations
 
-There's several functions that could be broken into util functions to further simplify the code and improve the overall maintainability. However, these take more time to implement. So, they have to be left for the future.
+There's several functions that could be broken into util functions to further simplify the code and improve the overall maintainability.
 
-Also, it'd be nice to have a constants file that contains all of the text of common HTML. Like, HEADER="Expense Tracker" so it can be imported and reused into multiple places. Ideally this would be done for every instance of hard coded constants. Again, in the interest of time, these can't happen right now. But with more time, this would be a very good next step.
+Also, it'd be nice to have a constants file that contains all of the text of common HTML. Like, HEADER="Expense Tracker" so it can be imported and reused into multiple places. Ideally this would be done for every instance of hard coded constants. 
