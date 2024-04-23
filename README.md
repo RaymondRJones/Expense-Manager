@@ -1,3 +1,8 @@
+# DEMO
+Deployed using Cloudflare and Github Repository
+
+https://rays-expense-manager.pages.dev/
+
 # Running the project
 
 Node version v20.5.1 was used for this project.
