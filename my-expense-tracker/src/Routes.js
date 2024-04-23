@@ -1,16 +1,16 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import MainScreen from './screens/MainScreen'; 
 
-function Routes() {
+function AppRoutes() {
   return (
     <Router>
-      <Switch>
-        <Route exact path="/" component={MainScreen} />
+      <Routes>
+        <Route path="/" element={<MainScreen />} />
         {/* Add more routes as needed */}
-      </Switch>
+      </Routes>
     </Router>
   );
 }
 
-export default Routes;
+export default AppRoutes;
